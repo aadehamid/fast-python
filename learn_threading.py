@@ -19,11 +19,11 @@ def main():
     current_threads = []
     for i in range(5):
         maximum_value = (i + 1) * 1000000
-        t = threading.Thread(target=calc_sum_squares, args=(maximum_value, ))
+        t = threading.Thread(target=calc_sum_squares, args=(maximum_value, ), daemon=True)
         t.start()
         current_threads.append(t)
         # calc_sum_squares((i + 1) * 1000000)
-    # end = time.perf_counter()
+
     for thread in current_threads:
         thread.join()
     print(f"Time elapsed for calc_sum_square: {time.perf_counter() - calc_start:.2f} seconds")
@@ -32,9 +32,12 @@ def main():
 
     current_threads = []
     for second in range(1, 6):
-        t = threading.Thread(target=sleep_a_little, args=(second, ))
+        t = threading.Thread(target=sleep_a_little, args=(second, ), daemon=True)
         t.start()
+        # t.join() # blocks execution until each thread is finished. An equivalent of sequential program.
         current_threads.append(t)
+
+    # Now we wait to start all threads at once before we block each of them
     for thread in current_threads:
         thread.join()
         # sleep_a_little(i)
